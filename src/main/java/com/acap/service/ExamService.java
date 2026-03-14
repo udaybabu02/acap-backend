@@ -18,20 +18,16 @@ public class ExamService {
     private QuestionRepository questionRepository;
 
     public ExamStartResponse startExam(String subject) {
-        // 1. Fetch all questions for the chosen subject
         List<Question> allQuestions = questionRepository.findBySubject(subject);
-        
-        // 2. Shuffle them so every student gets a different order
         Collections.shuffle(allQuestions);
         
-        // 3. Pick the top 10 (or however many you want)
         List<Question> selected = allQuestions.stream().limit(10).collect(Collectors.toList());
-        
         
         List<QuestionDto> dtos = selected.stream().map(q -> new QuestionDto(
             q.getId(), q.getQuestionText(), q.getOptionA(), q.getOptionB(), q.getOptionC(), q.getOptionD()
         )).collect(Collectors.toList());
         
-        return new ExamStartResponse(); // 60 minutes duration
+      
+        return new ExamStartResponse(dtos, 60); 
     }
 }
